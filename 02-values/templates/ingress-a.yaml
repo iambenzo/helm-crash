@@ -1,0 +1,19 @@
+{{- if .Values.microAppA.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microapp
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.microAppA.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: microapp-service
+            port:
+              number: {{ .Values.microAppA.port }}
+        path: /
+        pathType: Prefix
+{{- end -}}

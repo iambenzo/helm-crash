@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microapp-b
+  labels:
+    app: microapp-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microapp-b
+  template:
+    metadata:
+      labels:
+        app: microapp-b
+    spec:
+      containers:
+      - name: microapp-b
+        image: docker.io/library/micro-b:0.0.1
+        imagePullPolicy: Never
+        env:
+        - name: OTEL_ENDPOINT
+          value: "otel-agent-collector.otel.svc:4317"
+        ports:
+        - containerPort: 80

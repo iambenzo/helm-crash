@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
+    nginx.ingress.kubernetes.io/opentelemetry-trust-incoming-span: "true"
+  name: microapp
+spec:
+  ingressClassName: microapp
+  rules:
+  - host: microapp.llcdt.gov.wales
+    http:
+      paths:
+      - backend:
+          service:
+            name: microapp-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

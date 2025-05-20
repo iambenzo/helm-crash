@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microapp-b
+  labels:
+    app: microapp-b
+spec:
+  replicas: {{ .Values.microAppB.replicas }}
+  selector:
+    matchLabels:
+      app: microapp-b
+  template:
+    metadata:
+      labels:
+        app: microapp-b
+    spec:
+      containers:
+      - name: microapp-b
+        image: "{{ .Values.global.image.registry -}}micro-b:{{ .Chart.AppVersion }}"
+        imagePullPolicy: Never
+        env:
+        - name: OTEL_ENDPOINT
+          value: {{ .Values.global.otelEndpoint }}
+        ports:
+        - containerPort: {{ .Values.microAppB.port }}

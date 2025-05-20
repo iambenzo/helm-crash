@@ -1,0 +1,3 @@
+{{- range .Values.apps -}}
+{{- include "chart.deployment" (dict "ctx" $ "component" .) }}
+{{- end -}}

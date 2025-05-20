@@ -1,0 +1,27 @@
+_default:
+    just -l
+
+# Build containers && load them to kind cluster
+containers:
+    docker build -f apps/a/Dockerfile -t docker.io/library/micro-a:0.0.1 apps/a
+    docker build -f apps/b/Dockerfile -t docker.io/library/micro-b:0.0.1 apps/b
+    docker pull alpine:latest
+    kind load docker-image -n crash docker.io/library/micro-a:0.0.1
+    kind load docker-image -n crash docker.io/library/micro-b:0.0.1
+    kind load docker-image -n crash docker.io/library/alpine:latest
+
+# Check the images available to a node
+images:
+    docker exec -it crash-control-plane crictl images
+
+# Create a Kind cluster (needs Docker to be running)
+kind:
+    kind create cluster --config kind.yaml
+    kubectl apply -f https://kind.sigs.k8s.io/examples/ingress/deploy-ingress-nginx.yaml
+
+# Get everything ready for the show
+init: kind containers images
+
+# Delete everything
+destroy:
+    kind delete cluster -n crash

@@ -1,0 +1,15 @@
+global:
+  otelEndpoint: "otel-agent-collector.otel.svc:4317"
+  image:
+    registry: docker.io/library/
+
+microAppA:
+  port: 80
+  replicas: 1
+  ingress:
+    enabled: true
+    host: localhost
+
+microAppB:
+  port: 80
+  replicas: 1

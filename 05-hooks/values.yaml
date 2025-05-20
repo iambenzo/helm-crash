@@ -1,0 +1,74 @@
+global:
+  otelEndpoint: "otel-agent-collector.otel.svc:4317"
+  image:
+    registry: docker.io/library/
+
+ingress:
+  enabled: false
+  host: localhost
+  port: 80
+  target: microapp-a
+
+hooks:
+  - name: "one"
+    weight: "1"
+    sleepyTime: 5
+  - name: "two"
+    weight: "2"
+    sleepyTime: 10
+  - name: "three"
+    weight: "3"
+    sleepyTime: 15
+
+apps:
+  - name: microapp-a
+    replicas: 1
+    port: 80
+    image:
+      name: micro-a
+    env:
+      serviceBEndpoint: "microapp-b.apps.svc.cluster.local"
+  - name: microapp-b
+    replicas: 1
+    port: 80
+    image:
+      name: micro-b
+
+ingress-nginx:
+  # Override values for your dependency here
+  # in the same way you'd normally provide custom values
+  #
+  # You can look at the available values for a chart
+  # with `helm show values {chart-location}`
+  #
+  # NOTE: indentation
+  controller:
+    metrics:
+      enabled: true
+    podAnnotations:
+      prometheus.io/port: "10254"
+      prometheus.io/scrape: "true"
+    replicaCount: 1
+    config:
+      proxy-body-size: "120m"
+      client-max-body-size: "120m"
+    electionID: microapp
+    ingressClassResource:
+      name: "microapp"
+      enabled: true
+      default: false
+      controllerValue: "k8s.io/microapp-ingress"
+    ingressClass: "microapp"
+    controllerClass: "microapp"
+    service:
+      loadBalancerIP: 10.108.38.20
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+    admissionWebhooks:
+      patch:
+        podAnnotations:
+          linkerd.io/inject: disabled
+    allowSnippetAnnotations: true
+  defaultBackend:
+     enabled: false

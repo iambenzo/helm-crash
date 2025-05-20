@@ -1,0 +1,3 @@
+{{- range .Values.hooks -}}
+{{- include "chart.hook" (dict "ctx" $ "component" .) }}
+{{- end -}}

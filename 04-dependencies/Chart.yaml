@@ -1,0 +1,11 @@
+apiVersion: v2
+name: microapps
+version: 0.1.3 # chart version
+appVersion: "0.0.1" # application version
+description: Demo apps for Helm crash course # chart description
+type: application
+dependencies:
+  - name: ingress-nginx # Chart name
+    version: 4.12.2 # Chart version
+    repository: "https://kubernetes.github.io/ingress-nginx" # Chart repository
+    condition: ingress.enabled

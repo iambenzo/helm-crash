@@ -1,0 +1,6 @@
+apiVersion: v2
+name: microapps
+version: 0.1.1 # chart version
+appVersion: "0.0.1" # application version
+description: Demo apps for Helm crash course # chart description
+type: application
